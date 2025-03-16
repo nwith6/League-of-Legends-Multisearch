@@ -1,25 +1,25 @@
+import os
 import webbrowser
 import configparser
-
-from os import system, name
 
 
 banner = """
 
- ██▓     ▒█████   ██▓        ███▄ ▄███▓ █    ██  ██▓  ▄▄▄█████▓ ██▓  ██████ ▓█████ ▄▄▄       ██▀███   ▄████▄   ██░ ██ 
-▓██▒    ▒██▒  ██▒▓██▒       ▓██▒▀█▀ ██▒ ██  ▓██▒▓██▒  ▓  ██▒ ▓▒▓██▒▒██    ▒ ▓█   ▀▒████▄    ▓██ ▒ ██▒▒██▀ ▀█  ▓██░ ██▒
-▒██░    ▒██░  ██▒▒██░       ▓██    ▓██░▓██  ▒██░▒██░  ▒ ▓██░ ▒░▒██▒░ ▓██▄   ▒███  ▒██  ▀█▄  ▓██ ░▄█ ▒▒▓█    ▄ ▒██▀▀██░
-▒██░    ▒██   ██░▒██░       ▒██    ▒██ ▓▓█  ░██░▒██░  ░ ▓██▓ ░ ░██░  ▒   ██▒▒▓█  ▄░██▄▄▄▄██ ▒██▀▀█▄  ▒▓▓▄ ▄██▒░▓█ ░██ 
-░██████▒░ ████▓▒░░██████▒   ▒██▒   ░██▒▒▒█████▓ ░██████▒▒██▒ ░ ░██░▒██████▒▒░▒████▒▓█   ▓██▒░██▓ ▒██▒▒ ▓███▀ ░░▓█▒░██▓
-░ ▒░▓  ░░ ▒░▒░▒░ ░ ▒░▓  ░   ░ ▒░   ░  ░░▒▓▒ ▒ ▒ ░ ▒░▓  ░▒ ░░   ░▓  ▒ ▒▓▒ ▒ ░░░ ▒░ ░▒▒   ▓▒█░░ ▒▓ ░▒▓░░ ░▒ ▒  ░ ▒ ░░▒░▒
-░ ░ ▒  ░  ░ ▒ ▒░ ░ ░ ▒  ░   ░  ░      ░░░▒░ ░ ░ ░ ░ ▒  ░  ░     ▒ ░░ ░▒  ░ ░ ░ ░  ░ ▒   ▒▒ ░  ░▒ ░ ▒░  ░  ▒    ▒ ░▒░ ░
-  ░ ░   ░ ░ ░ ▒    ░ ░      ░      ░    ░░░ ░ ░   ░ ░   ░       ▒ ░░  ░  ░     ░    ░   ▒     ░░   ░ ░         ░  ░░ ░
-    ░  ░    ░ ░      ░  ░          ░      ░         ░  ░        ░        ░     ░  ░     ░  ░   ░     ░ ░       ░  ░  ░
+  ██▓     ▒█████   ██▓        ███▄ ▄███▓ █    ██  ██▓  ▄▄▄█████▓ ██▓  ██████ ▓█████ ▄▄▄       ██▀███   ▄████▄   ██░ ██ 
+ ▓██▒    ▒██▒  ██▒▓██▒       ▓██▒▀█▀ ██▒ ██  ▓██▒▓██▒  ▓  ██▒ ▓▒▓██▒▒██    ▒ ▓█   ▀▒████▄    ▓██ ▒ ██▒▒██▀ ▀█  ▓██░ ██▒
+ ▒██░    ▒██░  ██▒▒██░       ▓██    ▓██░▓██  ▒██░▒██░  ▒ ▓██░ ▒░▒██▒░ ▓██▄   ▒███  ▒██  ▀█▄  ▓██ ░▄█ ▒▒▓█    ▄ ▒██▀▀██░
+ ▒██░    ▒██   ██░▒██░       ▒██    ▒██ ▓▓█  ░██░▒██░  ░ ▓██▓ ░ ░██░  ▒   ██▒▒▓█  ▄░██▄▄▄▄██ ▒██▀▀█▄  ▒▓▓▄ ▄██▒░▓█ ░██ 
+ ░██████▒░ ████▓▒░░██████▒   ▒██▒   ░██▒▒▒█████▓ ░██████▒▒██▒ ░ ░██░▒██████▒▒░▒████▒▓█   ▓██▒░██▓ ▒██▒▒ ▓███▀ ░░▓█▒░██▓
+ ░ ▒░▓  ░░ ▒░▒░▒░ ░ ▒░▓  ░   ░ ▒░   ░  ░░▒▓▒ ▒ ▒ ░ ▒░▓  ░▒ ░░   ░▓  ▒ ▒▓▒ ▒ ░░░ ▒░ ░▒▒   ▓▒█░░ ▒▓ ░▒▓░░ ░▒ ▒  ░ ▒ ░░▒░▒
+ ░ ░ ▒  ░  ░ ▒ ▒░ ░ ░ ▒  ░   ░  ░      ░░░▒░ ░ ░ ░ ░ ▒  ░  ░     ▒ ░░ ░▒  ░ ░ ░ ░  ░ ▒   ▒▒ ░  ░▒ ░ ▒░  ░  ▒    ▒ ░▒░ ░
+   ░ ░   ░ ░ ░ ▒    ░ ░      ░      ░    ░░░ ░ ░   ░ ░   ░       ▒ ░░  ░  ░     ░    ░   ▒     ░░   ░ ░         ░  ░░ ░
+     ░  ░    ░ ░      ░  ░          ░      ░         ░  ░        ░        ░     ░  ░     ░  ░   ░     ░ ░       ░  ░  ░
 """
 padding = 15
 
-def main():
-    config = configparser.ConfigParser(allow_no_value=True); config.read('config.ini')
+
+def main() -> None:
+    config = configparser.ConfigParser(allow_no_value=True); config.read(os.getcwd() + "/config.ini")
 
     if not verify_config(config):
         return print("Config is invalid, please ensure all keys are correct. Use the 'DEFAULT' and 'Example' sections as a reference.")
@@ -71,8 +71,8 @@ def site_menu() -> str:
             clear()
 
 
-def clear():
-    system('cls' if name == 'nt' else 'clear')
+def clear() -> None:
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 
 def verify_config(config: list[str]) -> bool:
@@ -91,7 +91,7 @@ def parse_section(config: list[str], option: str) -> dict:
     return accounts
 
 
-def create_url(site, region, username):
+def create_url(site: str, region: str, username: str) -> str:
     url = str()
     username = username.replace("#", "-"); username = username.replace(" ", "%20")
 
